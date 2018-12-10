@@ -8,6 +8,9 @@ class API(object):
         self.logger = logger
 
     def execute(self, cmd):
+        if self.logger is not None:
+            self.logger.debug('Command: \'' + cmd + '\' is about to be executed.')
+
         ret = os.system(cmd)
         if ret != 0:
             if self.logger is not None:
@@ -19,6 +22,9 @@ class API(object):
             return True
 
     def execute_and_return(self, cmd):
+        if self.logger is not None:
+            self.logger.debug('Command: \'' + cmd + '\' is about to be executed.')
+
         ret = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).communicate()
 
         if ret[0] == '' and ret[1] != '':
@@ -28,10 +34,10 @@ class API(object):
         elif ret[1] == '':
             if self.logger is not None:
                 self.logger.debug(
-                    'Command: \'' + cmd + '\' has been applied and return the following: \'' + ret[0] + '\'.')
+                    'Command: \'' + cmd + '\' has been applied and return the following: \n' + ret[0])
             return ret[0]
         else:
             if self.logger is not None:
                 self.logger.debug(
-                    'Command: \'' + cmd + '\' may be illegal, but return the following:\'' + ret[0] + '\'')
+                    'Command: \'' + cmd + '\' may be illegal, but return the following: \n' + ret[0])
             return ret[0]
