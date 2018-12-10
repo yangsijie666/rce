@@ -34,7 +34,7 @@ class Manager(object):
         """
         for executor_pid in self.executor_pids:
             try:
-                os.kill(executor_pid, sig=signal.SIGTERM)
+                os.kill(executor_pid, signal.SIGTERM)
             except OSError:
                 continue
         # empty the list
