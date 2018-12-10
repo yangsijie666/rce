@@ -1,6 +1,5 @@
 import os
 import subprocess
-import six
 
 
 class API(object):
@@ -12,20 +11,27 @@ class API(object):
         ret = os.system(cmd)
         if ret != 0:
             if self.logger is not None:
-                self.logger.debug('Command: \'' + cmd + '\' is illegal.', exc_info=True)
+                self.logger.debug('Command: \'' + cmd + '\' is illegal.')
             return False
         else:
             if self.logger is not None:
-                self.logger.debug('Command: \'' + cmd + '\' has been applied.', exc_info=True)
+                self.logger.debug('Command: \'' + cmd + '\' has been applied.')
             return True
 
     def execute_and_return(self, cmd):
-        if six.PY2:
-            ret = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
+        ret = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).communicate()
+
+        if ret[0] == '' and ret[1] != '':
+            if self.logger is not None:
+                self.logger.debug('Command: \'' + cmd + '\' is illegal.')
+            return None
+        elif ret[1] == '':
+            if self.logger is not None:
+                self.logger.debug(
+                    'Command: \'' + cmd + '\' has been applied and return the following: \'' + ret[0] + '\'.')
+            return ret[0]
         else:
-            ret = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).communicate()[0].decode()
-
-        if self.logger is not None:
-            self.logger.debug('Command: \'' + cmd + '\' has been applied and return the following: \'' + ret + '\'.')
-
-        return ret
+            if self.logger is not None:
+                self.logger.debug(
+                    'Command: \'' + cmd + '\' may be illegal, but return the following:\'' + ret[0] + '\'')
+            return ret[0]
