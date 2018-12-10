@@ -9,9 +9,9 @@ class CommandExecutor(multiprocessing.Process):
 
     def __init__(self, cmds):
         """a Command Executor."""
+        super(CommandExecutor, self).__init__()
         self.cmds = self._format_commands_to_list(cmds)
         self.daemon = True
-        super(CommandExecutor, self).__init__()
 
     @classmethod
     def _format_commands_to_list(cls, cmds):
