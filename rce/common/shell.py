@@ -26,7 +26,7 @@ class API(object):
         :param cmd: commands needs to be executed
         :return:
         """
-        signal.signal(signal.SIGALRM, self._signal_handler)
+        signal.signal(signal.SIGTERM, self._signal_handler)
 
         if self.logger is not None:
             self.logger.debug('Command: \'' + cmd + '\' is about to be executed.')
